@@ -48,6 +48,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
+                <name>dev</name>
                 <maven.test.skip>true</maven.test.skip>
                 <conf.server>confserver.ailu.internal</conf.server>
                 <conf.profile>dev</conf.profile>
@@ -58,6 +59,7 @@
         <profile>
             <id>prod</id>
             <properties>
+                <name>prod</name>
                 <maven.test.skip>true</maven.test.skip>
                 <confserver.ailu.internal>confserver.ailu.internal</confserver.ailu.internal>
                 <conf.profile>prod</conf.profile>
@@ -133,7 +135,7 @@
 
     <build>
         <!-- 打包后的启动jar名称 -->
-        <finalName>conf-cli</finalName>
+       <!-- <finalName>conf-cli</finalName>-->
 
         <plugins>
             <plugin>
