@@ -146,48 +146,6 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <mainClass>tk.xboot.confcli.ConfCliApplication</mainClass>
-                            <classpathPrefix>../lib</classpathPrefix>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                        <manifestEntries>
-                            <Class-Path>../config/</Class-Path>
-                        </manifestEntries>
-                    </archive>
-
-                    &lt;!&ndash; 项目启动jar包排除目录 &ndash;&gt;
-                    <excludes>
-                        <exclude>bin/**</exclude>
-                        <exclude>config/**</exclude>
-                        <exclude>logs/**</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <layout>ZIP</layout>
-                    &lt;!&ndash; 项目启动jar包中排除依赖包 &ndash;&gt;
-                    <includes>
-                        <include>
-                            <groupId>non-exists</groupId>
-                            <artifactId>non-exists</artifactId>
-                        </include>
-                    </includes>
-                </configuration>
-            </plugin>
-
-
-            <plugin>
                 <groupId>pl.project13.maven</groupId>
                 <artifactId>git-commit-id-plugin</artifactId>
                 <executions>
@@ -202,35 +160,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>target/lib</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                            <includeScope>compile</includeScope>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -248,17 +177,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                </configuration>
             </plugin>
 
             &lt;!&ndash; assembly package &ndash;&gt;
@@ -313,45 +231,39 @@
                     <include>test.jks</include>
                 </includes>
             </resource>
-
-
-            &lt;!&ndash; Filter shell script within bin dir &ndash;&gt;
-             <resource>
-                <directory>src/bin</directory>
-                <filtering>true</filtering>
-                <targetPath>bin</targetPath>
-                <includes>
-                    <include>*.bat</include>
-                    <include>*.sh</include>
-                </includes>
-            </resource>
         </resources>
     </build>-->
 
 
     <build>
         <plugins>
-
-           <!-- <plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.1.2</version>
                 <configuration>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
+                        <!-- Use loader.path instead of this node -->
+                        <!-- <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>../lib</classpathPrefix>
-                            &lt;!&ndash;<useUniqueVersions>false</useUniqueVersions>&ndash;&gt;
+                            <useUniqueVersions>false</useUniqueVersions>
                             <mainClass>tk.xboot.confcli.ConfCliMain</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>./config</Class-Path>
-                        </manifestEntries>
+                        </manifestEntries>-->
                     </archive>
-                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <!-- Use   <targetPath>${project.build.directory}/config</targetPath>  instead of this node -->
+                   <!-- <excludes>
+                        <exclude>*.yml</exclude>
+                        <exclude>*.properties</exclude>
+                        <exclude>config/</exclude>
+                    </excludes>-->
                 </configuration>
-            </plugin>-->
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -374,47 +286,6 @@
             </plugin>
 
 
-            <!--拷贝资源文件 copy-resources-->
-           <!-- <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/main/resources</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.build.directory}/config</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>bin</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/bin</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${project.build.directory}/bin</outputDirectory>
-                        </configuration>
-                    </execution>
-
-                </executions>
-            </plugin>-->
-
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -430,6 +301,7 @@
                     <!--使用外部配置文件，jar包里没有资源文件-->
                     <addResources>true</addResources>
                     <outputDirectory>${project.build.directory}</outputDirectory>
+                    <includeSystemScope>true</includeSystemScope>
                     <executable>true</executable>
                     <fork>true</fork>
                 </configuration>
@@ -453,13 +325,14 @@
              <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <!--<includes>
-                    <include>bootstrap.yml</include>
-                </includes>-->
-                <excludes>
-                    <exclude>*.yml</exclude>
-                    <exclude>*.properties</exclude>
-                </excludes>
+                <targetPath>${project.build.directory}/config</targetPath>
+            </resource>
+
+            <resource>
+                <directory>src/bin</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/bin</targetPath>
+
             </resource>
         </resources>
     </build>
