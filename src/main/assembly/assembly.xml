@@ -6,11 +6,11 @@
     <!-- Package for different type -->
     <formats>
         <format>dir</format>
-        <format>tar.gz</format>
-        <format>zip</format>
+        <!--<format>tar.gz</format>-->
+        <!--<format>zip</format>-->
     </formats>
 
-    <includeBaseDirectory>true</includeBaseDirectory>
+    <includeBaseDirectory>false</includeBaseDirectory>
 
     <fileSets>
         <!--
@@ -29,6 +29,17 @@
         <fileSet>
             <directory>${build.outputDirectory}/config</directory>
             <outputDirectory>config</outputDirectory>
+            <fileMode>0644</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>${build.outputDirectory}/*.properties</directory>
+            <outputDirectory>config/</outputDirectory>
+            <fileMode>0644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>${build.outputDirectory}/*.yml</directory>
+            <outputDirectory>config/</outputDirectory>
             <fileMode>0644</fileMode>
         </fileSet>
 

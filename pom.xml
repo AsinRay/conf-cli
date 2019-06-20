@@ -61,9 +61,9 @@
             <properties>
                 <name>prod</name>
                 <maven.test.skip>true</maven.test.skip>
-                <confserver.ailu.internal>confserver.ailu.internal</confserver.ailu.internal>
+                <conf.server>confserver.ailu.internal</conf.server>
                 <conf.profile>prod</conf.profile>
-                <conf.token>2b117fda23d33cabb3a4c8cec8b53e1d:2a08uPjjIi3FMbrWZdscWTscNus4l7rUBEJZG21vI5lZLPtu3zr.laRS@</conf.token>
+                <conf.token>333eed7a8f003f3ab434ce5af6a6b4a9:2a08N9vRjB3PcGcBJyvr5TptxOykLGJPIuPRmxmO6TMfSQHb5YeoHDM9e@</conf.token>
             </properties>
         </profile>
     </profiles>
@@ -113,6 +113,13 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>2.5.7</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -133,9 +140,9 @@
     </dependencyManagement>
 
 
-    <build>
-        <!-- 打包后的启动jar名称 -->
-       <!-- <finalName>conf-cli</finalName>-->
+   <!-- <build>
+        &lt;!&ndash; 打包后的启动jar名称 &ndash;&gt;
+       &lt;!&ndash; <finalName>conf-cli</finalName>&ndash;&gt;
 
         <plugins>
             <plugin>
@@ -144,16 +151,18 @@
                 <version>3.1.0</version>
                 <configuration>
                     <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
                         <manifest>
-                            <!-- 项目启动类 -->
                             <mainClass>tk.xboot.confcli.ConfCliApplication</mainClass>
-                            <!-- 依赖的jar的目录前缀 -->
                             <classpathPrefix>../lib</classpathPrefix>
                             <addClasspath>true</addClasspath>
                         </manifest>
+                        <manifestEntries>
+                            <Class-Path>../config/</Class-Path>
+                        </manifestEntries>
                     </archive>
 
-                    <!-- 项目启动jar包排除目录 -->
+                    &lt;!&ndash; 项目启动jar包排除目录 &ndash;&gt;
                     <excludes>
                         <exclude>bin/**</exclude>
                         <exclude>config/**</exclude>
@@ -167,7 +176,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <layout>ZIP</layout>
-                    <!-- 项目启动jar包中排除依赖包 -->
+                    &lt;!&ndash; 项目启动jar包中排除依赖包 &ndash;&gt;
                     <includes>
                         <include>
                             <groupId>non-exists</groupId>
@@ -218,7 +227,30 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.1.0</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <attach>true</attach>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -229,25 +261,17 @@
                 </configuration>
             </plugin>
 
-            <!-- Skip test ＠see profile for more details-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.1</version>
-                <configuration>
-                    <skipTests>true</skipTests>
-                </configuration>
-            </plugin>
-
-            <!-- assembly package -->
+            &lt;!&ndash; assembly package &ndash;&gt;
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
                     </descriptors>
+
                 </configuration>
                 <executions>
                     <execution>
@@ -269,12 +293,12 @@
                     <include>mapper/**/*.xml</include>
                     <include>static/**</include>
                     <include>templates/**</include>
-                    <!-- 各环境jks都一样时，可直接打包到jar中 -->
-                    <!--<include>test.jks</include>-->
+                    &lt;!&ndash; 各环境jks都一样时，可直接打包到jar中 &ndash;&gt;
+                    &lt;!&ndash;<include>test.jks</include>&ndash;&gt;
                 </includes>
             </resource>
 
-            <!-- filter conf dir -->
+            &lt;!&ndash; filter conf dir &ndash;&gt;
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
@@ -282,14 +306,16 @@
                     <include>application.yml</include>
                     <include>application-*.yml</include>
                     <include>**/*.properties</include>
-                    <!-- 如果各个环境的jks不一样，则配置到外部config目录中
-                        java代码中通过ClassPathFileUtil.getFile()获取 -->
+                    <include>bootstrap.yml</include>
+                    <include>config/**</include>
+                    &lt;!&ndash; 如果各个环境的jks不一样，则配置到外部config目录中
+                        java代码中通过ClassPathFileUtil.getFile()获取 &ndash;&gt;
                     <include>test.jks</include>
                 </includes>
             </resource>
 
 
-            <!-- Filter shell script within bin dir -->
+            &lt;!&ndash; Filter shell script within bin dir &ndash;&gt;
              <resource>
                 <directory>src/bin</directory>
                 <filtering>true</filtering>
@@ -299,25 +325,111 @@
                     <include>*.sh</include>
                 </includes>
             </resource>
-
-            <!-- 包含日志到logs目录 -->
-            <resource>
-                <directory>src/logs</directory>
-                <targetPath>logs</targetPath>
-                <includes>
-                    <include>*.log</include>
-                </includes>
-            </resource>
         </resources>
-    </build>
+    </build>-->
 
 
-    <!--<build>
+    <build>
         <plugins>
+
+           <!-- <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../lib</classpathPrefix>
+                            &lt;!&ndash;<useUniqueVersions>false</useUniqueVersions>&ndash;&gt;
+                            <mainClass>tk.xboot.confcli.ConfCliMain</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>./config</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
+                            <includeScope>runtime</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+
+            <!--拷贝资源文件 copy-resources-->
+           <!-- <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-resources</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/main/resources</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/config</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <execution>
+                        <id>bin</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/bin</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/bin</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                </executions>
+            </plugin>-->
+
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>null</groupId>
+                            <artifactId>null</artifactId>
+                        </include>
+                    </includes>
+
+                    <!--使用外部配置文件，jar包里没有资源文件-->
+                    <addResources>true</addResources>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
                     <executable>true</executable>
                     <fork>true</fork>
                 </configuration>
@@ -325,50 +437,32 @@
                     <execution>
                         <goals>
                             <goal>repackage</goal>
-                            <goal>build-info</goal>
                         </goals>
+                        <configuration>
+                            <!--配置jar包特殊标识 配置后，保留原文件，生成新文件 *-run.jar -->
+                            <!--配置jar包特殊标识 不配置，原文件命名为 *.jar.original，生成新文件 *.jar -->
+                            <classifier>run</classifier>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
 
-
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                </configuration>
-            </plugin>
         </plugins>
 
         <resources>
-            <resource>
+             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-            </resource>
-            &lt;!&ndash; <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
+                <!--<includes>
+                    <include>bootstrap.yml</include>
+                </includes>-->
                 <excludes>
-                    <exclude>**/*.jks</exclude>
+                    <exclude>*.yml</exclude>
+                    <exclude>*.properties</exclude>
                 </excludes>
             </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*.jks</include>
-                </includes>
-            </resource> &ndash;&gt;
         </resources>
-    </build>-->
+    </build>
 
     <repositories>
         <repository>
