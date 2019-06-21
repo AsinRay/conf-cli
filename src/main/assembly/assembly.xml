@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <assembly>
     <!-- Define the project env, e.g. conf-cli-dev-2.0.0.RELEASE.tar.gz -->
-    <id>${name}</id>
+    <!--<id>${name}</id>-->
+    <id>name</id>
 
     <!-- Package for different type -->
     <formats>
@@ -12,6 +13,16 @@
 
     <includeBaseDirectory>false</includeBaseDirectory>
 
+    <!-- 指定将工程依赖的包打到包里的指定目录下 -->
+    <dependencySets>
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact> <!-- 指定打包时是否包含工程自身生成的jar包 -->
+            <outputDirectory>lib</outputDirectory> <!-- 指定将这些依赖包打到包里lib目录下 -->
+            <scope>runtime</scope> <!-- 用于管理依赖的部署，runtime表示只在运行时使用 -->
+        </dependencySet>
+    </dependencySets>
+
+
     <fileSets>
         <!--
             0755->即用户具有读/写/执行权限，组用户和其它用户具有读写权限；
@@ -20,42 +31,34 @@
 
        <!-- 将src/bin目录下的所有文件输出到打包后的bin目录中 -->
         <fileSet>
-            <directory>${build.outputDirectory}/bin</directory>
+            <directory>${build.directory}/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <fileMode>0755</fileMode>
         </fileSet>
 
         <!-- 指定输出target/classes中的配置文件到config目录中 -->
         <fileSet>
-            <directory>${build.outputDirectory}/config</directory>
+            <directory>${build.directory}/config</directory>
             <outputDirectory>config</outputDirectory>
-            <fileMode>0644</fileMode>
-        </fileSet>
-
-        <fileSet>
-            <directory>${build.outputDirectory}/*.properties</directory>
-            <outputDirectory>config/</outputDirectory>
-            <fileMode>0644</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${build.outputDirectory}/*.yml</directory>
-            <outputDirectory>config/</outputDirectory>
             <fileMode>0644</fileMode>
         </fileSet>
 
         <!--  指定输出target/logs到logs目录中 -->
         <fileSet>
-            <directory>${build.outputDirectory}/logs</directory>
+            <directory>${build.directory}/logs</directory>
             <outputDirectory>logs</outputDirectory>
             <fileMode>0644</fileMode>
         </fileSet>
 
         <!-- 将第三方依赖打包到lib目录中 -->
-        <fileSet>
+     <!--   <fileSet>
             <directory>${build.directory}/lib</directory>
             <outputDirectory>lib</outputDirectory>
+            <scope>runtime</scope>
             <fileMode>0755</fileMode>
         </fileSet>
+    -->
+
 
         <!-- 将项目启动jar打包到boot目录中 -->
         <fileSet>
@@ -76,7 +79,5 @@
                 <include>*.md</include>
             </includes>
         </fileSet>
-
     </fileSets>
-
 </assembly>

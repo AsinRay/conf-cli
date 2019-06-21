@@ -52,7 +52,8 @@
                 <maven.test.skip>true</maven.test.skip>
                 <conf.server>confserver.ailu.internal</conf.server>
                 <conf.profile>dev</conf.profile>
-                <conf.token>3b3a8ad722c7d19b03444a77fbc662d2:2a08xRoBSTEIKo1mtuTFz8p7EemRCL8wkYWxaGwUCzvdsNx8rdsgtb6@</conf.token>
+                <conf.token>3b3a8ad722c7d19b03444a77fbc662d2:2a08xRoBSTEIKo1mtuTFz8p7EemRCL8wkYWxaGwUCzvdsNx8rdsgtb6@
+                </conf.token>
             </properties>
         </profile>
 
@@ -63,7 +64,9 @@
                 <maven.test.skip>true</maven.test.skip>
                 <conf.server>confserver.ailu.internal</conf.server>
                 <conf.profile>prod</conf.profile>
-                <conf.token>333eed7a8f003f3ab434ce5af6a6b4a9:2a08N9vRjB3PcGcBJyvr5TptxOykLGJPIuPRmxmO6TMfSQHb5YeoHDM9e@</conf.token>
+                <conf.token>
+                    333eed7a8f003f3ab434ce5af6a6b4a9:2a08N9vRjB3PcGcBJyvr5TptxOykLGJPIuPRmxmO6TMfSQHb5YeoHDM9e@
+                </conf.token>
             </properties>
         </profile>
     </profiles>
@@ -140,99 +143,60 @@
     </dependencyManagement>
 
 
-   <!-- <build>
-        &lt;!&ndash; 打包后的启动jar名称 &ndash;&gt;
-       &lt;!&ndash; <finalName>conf-cli</finalName>&ndash;&gt;
+    <!-- <build>
+         &lt;!&ndash; 打包后的启动jar名称 &ndash;&gt;
+        &lt;!&ndash; <finalName>conf-cli</finalName>&ndash;&gt;
+         <plugins>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-source-plugin</artifactId>
+                 <version>3.1.0</version>
+                 <configuration>
+                     <attach>true</attach>
+                     <encoding>UTF-8</encoding>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <phase>compile</phase>
+                         <goals>
+                             <goal>jar</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
 
-        <plugins>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
-                </configuration>
-            </plugin>
+         </plugins>
 
+         <resources>
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <includes>
+                     <include>db/*.sql</include>
+                     <include>mapper/**/*.xml</include>
+                     <include>static/**</include>
+                     <include>templates/**</include>
+                     &lt;!&ndash; 各环境jks都一样时，可直接打包到jar中 &ndash;&gt;
+                     &lt;!&ndash;<include>test.jks</include>&ndash;&gt;
+                 </includes>
+             </resource>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <attach>true</attach>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            &lt;!&ndash; assembly package &ndash;&gt;
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/assembly.xml</descriptor>
-                    </descriptors>
-
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>db/*.sql</include>
-                    <include>mapper/**/*.xml</include>
-                    <include>static/**</include>
-                    <include>templates/**</include>
-                    &lt;!&ndash; 各环境jks都一样时，可直接打包到jar中 &ndash;&gt;
-                    &lt;!&ndash;<include>test.jks</include>&ndash;&gt;
-                </includes>
-            </resource>
-
-            &lt;!&ndash; filter conf dir &ndash;&gt;
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-                <includes>
-                    <include>application.yml</include>
-                    <include>application-*.yml</include>
-                    <include>**/*.properties</include>
-                    <include>bootstrap.yml</include>
-                    <include>config/**</include>
-                    &lt;!&ndash; 如果各个环境的jks不一样，则配置到外部config目录中
-                        java代码中通过ClassPathFileUtil.getFile()获取 &ndash;&gt;
-                    <include>test.jks</include>
-                </includes>
-            </resource>
-        </resources>
-    </build>-->
+             &lt;!&ndash; filter conf dir &ndash;&gt;
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <filtering>true</filtering>
+                 <includes>
+                     <include>application.yml</include>
+                     <include>application-*.yml</include>
+                     <include>**/*.properties</include>
+                     <include>bootstrap.yml</include>
+                     <include>config/**</include>
+                     &lt;!&ndash; 如果各个环境的jks不一样，则配置到外部config目录中
+                         java代码中通过ClassPathFileUtil.getFile()获取 &ndash;&gt;
+                     <include>test.jks</include>
+                 </includes>
+             </resource>
+         </resources>
+     </build>-->
 
 
     <build>
@@ -256,33 +220,48 @@
                         </manifestEntries>-->
                     </archive>
                     <!-- Use   <targetPath>${project.build.directory}/config</targetPath>  instead of this node -->
-                   <!-- <excludes>
-                        <exclude>*.yml</exclude>
-                        <exclude>*.properties</exclude>
-                        <exclude>config/</exclude>
-                    </excludes>-->
+                    <!-- <excludes>
+                         <exclude>*.yml</exclude>
+                         <exclude>*.properties</exclude>
+                         <exclude>config/</exclude>
+                     </excludes>-->
                 </configuration>
             </plugin>
 
+            <!--  <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <version>3.1.0</version>
+                  <executions>
+                      <execution>
+                          <phase>prepare-package</phase>
+                          <goals>
+                              <goal>copy-dependencies</goal>
+                          </goals>
+                          <configuration>
+                              <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+                              <overWriteReleases>false</overWriteReleases>
+                              <overWriteSnapshots>false</overWriteSnapshots>
+                              <overWriteIfNewer>true</overWriteIfNewer>
+                              <includeScope>runtime</includeScope>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>-->
+
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.0</version>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>prepare-package</phase>
                         <goals>
-                            <goal>copy-dependencies</goal>
+                            <goal>revision</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib/</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>false</overWriteSnapshots>
-                            <overWriteIfNewer>true</overWriteIfNewer>
-                            <includeScope>runtime</includeScope>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                </configuration>
             </plugin>
 
 
@@ -290,6 +269,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
+                    <!--
+                    使用ZIP时启动类为需要在启动的shel本中设置
+                    -Dloader.path=../lib,../config
+                    用以设置classpath,这样在 maven-jar-plugin 中不需要再设置 manifestEntries
+                    -->
                     <layout>ZIP</layout>
                     <includes>
                         <include>
@@ -319,12 +303,34 @@
                 </executions>
             </plugin>
 
+            <!--assembly package -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
 
         <resources>
-             <resource>
+            <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <!-- 配置targetPath 在maven-jar-plugin中就无需设置excludes  -->
                 <targetPath>${project.build.directory}/config</targetPath>
             </resource>
 
@@ -332,7 +338,6 @@
                 <directory>src/bin</directory>
                 <filtering>true</filtering>
                 <targetPath>${project.build.directory}/bin</targetPath>
-
             </resource>
         </resources>
     </build>
