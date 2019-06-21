@@ -4,9 +4,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConfCliApplication {
+public class ConfCliMain {
 
     public static void main(String[] args) {
-        SpringApplication.run(ConfCliApplication.class, args);
+        SpringApplication.run(ConfCliMain.class, args);
     }
 }
