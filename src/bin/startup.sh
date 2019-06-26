@@ -23,9 +23,6 @@ cd ..
 BASE_PATH=`pwd`
 
 
-java  -Dloader.path=../lib,../config -Dloder.config.location=../config -jar ../boot/conf-cli-1.0.0.jar
-
-
 # 外部配置文件的绝对路经，如果是目录需要以/结尾，也可直接指定文件
 # 如果指定的是目录，spring则会读取目录中的所有配置文件
 CNF_DIR=${BASE_PATH}"/config/"
