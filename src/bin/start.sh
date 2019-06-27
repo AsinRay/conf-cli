@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-APPNAME=@project.build.finalName@
+APP_NAME=@project.name@
+BUILD_JAR="@project.build.finalName@.jar"
+
 
 JAVA=`which java`
 UNAME=`which uname`
@@ -68,8 +70,8 @@ log=`pwd`"/logs/"
 mklog ${log}
 mklog ${LOG_DIR}
 
-nohup java ${OPTS} -jar ${APP_HOME}/boot/${APPNAME}.jar 2>&1 &
+nohup java ${OPTS} -jar ${APP_HOME}/boot/${BUILD_JAR} 2>&1 &
 
-PID=$(ps -ef | grep "${APPNAME}" | grep -v 'grep' | awk '{ print $2 }')
+PID=$(ps -ef | grep "${BUILD_JAR}" | grep -v 'grep' | awk '{ print $2 }')
 echo -e ${PID} > ${APP_HOME}"/pid"
 
