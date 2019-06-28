@@ -1,6 +1,9 @@
 # flags to configure Netty
 -Dio.netty.noUnsafe=true
 -Dio.netty.noKeySetOptimization=true
+-Dio.netty.leakDetection.level=paranoid
+-Dio.netty.recycler.maxCapacity=0
+-Dio.netty.recycler.maxCapacity.default=0
 -Dio.netty.recycler.maxCapacityPerThread=0
 
 # log4j 2
