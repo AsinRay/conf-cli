@@ -198,6 +198,8 @@
 
 
     <build>
+        <!-- Sets name of regular artifact -->
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -301,12 +303,22 @@
                 </executions>
             </plugin>
 
+
+
             <!--assembly package -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
+                    <!-- Name of assembled jar with all dependencies -->
+                    <finalName>${project.artifactId}</finalName>
+                    <!-- Set to false to prevent '-jar-with-dependencies' to be appended to the file name
+                    <appendAssemblyId>true</appendAssemblyId>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>-->
+
                     <appendAssemblyId>false</appendAssemblyId>
                     <descriptors>
                         <descriptor>src/main/assembly/assembly.xml</descriptor>
