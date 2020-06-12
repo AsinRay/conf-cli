@@ -1,0 +1,360 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.0.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>tk.xboot</groupId>
+    <artifactId>conf-cli</artifactId>
+    <version>2.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>conf-cli</name>
+    <description>Demo project for Spring Boot</description>
+    <url>https://github.com/AsinRay/conf-cli</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>AsinRay</id>
+            <name>AsinRay</name>
+            <email>codezone@163.com</email>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
+        <spring-cloud.version>Greenwich.RELEASE</spring-cloud.version>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <name>dev</name>
+                <maven.test.skip>true</maven.test.skip>
+                <conf.server>confserver.ailu.internal</conf.server>
+                <conf.profile>dev</conf.profile>
+                <conf.token>3b3a8ad722c7d19b03444a77fbc662d2:2a08xRoBSTEIKo1mtuTFz8p7EemRCL8wkYWxaGwUCzvdsNx8rdsgtb6@
+                </conf.token>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>prod</id>
+            <properties>
+                <name>prod</name>
+                <maven.test.skip>true</maven.test.skip>
+                <conf.server>confserver.ailu.internal</conf.server>
+                <conf.profile>prod</conf.profile>
+                <conf.token>
+                    333eed7a8f003f3ab434ce5af6a6b4a9:2a08N9vRjB3PcGcBJyvr5TptxOykLGJPIuPRmxmO6TMfSQHb5YeoHDM9e@
+                </conf.token>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jul-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-undertow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy</artifactId>
+            <version>2.5.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
+    <!-- <build>
+         &lt;!&ndash; 打包后的启动jar名称 &ndash;&gt;
+        &lt;!&ndash; <finalName>conf-cli</finalName>&ndash;&gt;
+         <plugins>
+             <plugin>
+                 <groupId>org.apache.maven.plugins</groupId>
+                 <artifactId>maven-source-plugin</artifactId>
+                 <version>3.1.0</version>
+                 <configuration>
+                     <attach>true</attach>
+                     <encoding>UTF-8</encoding>
+                 </configuration>
+                 <executions>
+                     <execution>
+                         <phase>compile</phase>
+                         <goals>
+                             <goal>jar</goal>
+                         </goals>
+                     </execution>
+                 </executions>
+             </plugin>
+
+         </plugins>
+
+         <resources>
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <includes>
+                     <include>db/*.sql</include>
+                     <include>mapper/**/*.xml</include>
+                     <include>static/**</include>
+                     <include>templates/**</include>
+                     &lt;!&ndash; 各环境jks都一样时，可直接打包到jar中 &ndash;&gt;
+                     &lt;!&ndash;<include>test.jks</include>&ndash;&gt;
+                 </includes>
+             </resource>
+
+             &lt;!&ndash; filter conf dir &ndash;&gt;
+             <resource>
+                 <directory>src/main/resources</directory>
+                 <filtering>true</filtering>
+                 <includes>
+                     <include>application.yml</include>
+                     <include>application-*.yml</include>
+                     <include>**/*.properties</include>
+                     <include>bootstrap.yml</include>
+                     <include>config/**</include>
+                     &lt;!&ndash; 如果各个环境的jks不一样，则配置到外部config目录中
+                         java代码中通过ClassPathFileUtil.getFile()获取 &ndash;&gt;
+                     <include>test.jks</include>
+                 </includes>
+             </resource>
+         </resources>
+     </build>-->
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <!-- Use loader.path instead of this node -->
+                        <!-- <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../lib</classpathPrefix>
+                            <useUniqueVersions>false</useUniqueVersions>
+                            <mainClass>tk.xboot.confcli.ConfCliMain</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>./config</Class-Path>
+                        </manifestEntries>-->
+                    </archive>
+                    <!-- Use   <targetPath>${project.build.directory}/config</targetPath>  instead of this node -->
+                    <!-- <excludes>
+                         <exclude>*.yml</exclude>
+                         <exclude>*.properties</exclude>
+                         <exclude>config/</exclude>
+                     </excludes>-->
+                </configuration>
+            </plugin>
+
+            <!--  <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-dependency-plugin</artifactId>
+                  <version>3.1.0</version>
+                  <executions>
+                      <execution>
+                          <phase>prepare-package</phase>
+                          <goals>
+                              <goal>copy-dependencies</goal>
+                          </goals>
+                          <configuration>
+                              <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+                              <overWriteReleases>false</overWriteReleases>
+                              <overWriteSnapshots>false</overWriteSnapshots>
+                              <overWriteIfNewer>true</overWriteIfNewer>
+                              <includeScope>runtime</includeScope>
+                          </configuration>
+                      </execution>
+                  </executions>
+              </plugin>-->
+
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                </configuration>
+            </plugin>
+
+
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!--
+                    使用ZIP时启动类为需要在启动的shel本中设置
+                    -Dloader.path=../lib,../config
+                    用以设置classpath,这样在 maven-jar-plugin 中不需要再设置 manifestEntries
+                    -->
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>null</groupId>
+                            <artifactId>null</artifactId>
+                        </include>
+                    </includes>
+
+                    <!--使用外部配置文件，jar包里没有资源文件-->
+                    <addResources>true</addResources>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <includeSystemScope>true</includeSystemScope>
+                    <executable>true</executable>
+                    <fork>true</fork>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <!--配置jar包特殊标识 配置后，保留原文件，生成新文件 *-run.jar -->
+                            <!--配置jar包特殊标识 不配置，原文件命名为 *.jar.original，生成新文件 *.jar -->
+                            <classifier>run</classifier>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--assembly package -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <descriptors>
+                        <descriptor>src/main/assembly/assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <!-- 配置targetPath 在maven-jar-plugin中就无需设置excludes  -->
+                <targetPath>${project.build.directory}/config</targetPath>
+            </resource>
+
+            <resource>
+                <directory>src/bin</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/bin</targetPath>
+            </resource>
+        </resources>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>aliyun</id>
+            <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+</project>

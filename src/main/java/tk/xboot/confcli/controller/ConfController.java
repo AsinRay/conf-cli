@@ -12,6 +12,10 @@ public class ConfController {
     @Value("${app.hello}")
     private String hello;
 
+    @Value("${app.xxx}")
+    private String xxx;
+
+
     @GetMapping("hello")
     public String sayHello() {
         return this.hello;
@@ -20,6 +24,6 @@ public class ConfController {
 
     @GetMapping("h")
     public String sayH() {
-        return "xxx";
+        return this.xxx;
     }
 }
